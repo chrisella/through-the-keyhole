@@ -51,11 +51,17 @@ export function usePointerInput(
     }
 
     function onPointerMove(e: PointerEvent) {
+      const kh = keyholeRef.current!;
+
+      // Mouse: follow hover without needing a button held down
+      if (e.pointerType === 'mouse' && !active.has(e.pointerId)) {
+        kh.cursor = getCanvasPoint(e);
+        return;
+      }
+
       if (!active.has(e.pointerId)) return;
       const pt = getCanvasPoint(e);
       active.set(e.pointerId, pt);
-
-      const kh = keyholeRef.current!;
 
       if (active.size === 1) {
         kh.cursor = pt;
