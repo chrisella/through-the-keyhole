@@ -1,11 +1,13 @@
 import { Shape } from '../types';
 
 export const KEYHOLE_GEOMETRY = {
-  circleOffsetY: -0.25,
-  stemHalfWidth: 0.45,
-  stemBottom: 1.6,
-  arcStartDeg: 210,
-  arcEndDeg: 330,
+  // Circle center is above the anchor point
+  circleOffsetY: -0.3,
+  // Degrees from straight-down (90°) to the open slot edges — 25° each side = 50° total opening
+  openHalfDeg: 25,
+  // Stem width at the bottom, widens from the circle opening
+  stemBottomHalfWidth: 0.5,
+  stemBottom: 1.3,
 } as const;
 
 export const MIN_SIZE = 20;
@@ -46,24 +48,35 @@ function buildRect(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: 
 function buildKeyhole(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number): void {
   const g = KEYHOLE_GEOMETRY;
   const circleCY = cy + size * g.circleOffsetY;
-  const startRad = (g.arcStartDeg * Math.PI) / 180;
-  const endRad = (g.arcEndDeg * Math.PI) / 180;
 
-  // Start at the arc-start point on the circle
-  const startX = cx + size * Math.cos(startRad);
-  const startY = circleCY + size * Math.sin(startRad);
+  // Angles where the stem meets the circle (measured from positive x-axis, clockwise in canvas)
+  // Straight down = 90°; we open by ±openHalfDeg from there
+  const downRad = Math.PI / 2;
+  const openHalfRad = (g.openHalfDeg * Math.PI) / 180;
+  const rightJoinAngle = downRad - openHalfRad; // e.g. 65°
+  const leftJoinAngle  = downRad + openHalfRad; // e.g. 115°
 
-  ctx.moveTo(startX, startY);
+  // Points where the circle edge meets the stem
+  const rightJoinX = cx + size * Math.cos(rightJoinAngle);
+  const rightJoinY = circleCY + size * Math.sin(rightJoinAngle);
+  const leftJoinX  = cx + size * Math.cos(leftJoinAngle);
+  const leftJoinY  = circleCY + size * Math.sin(leftJoinAngle);
 
-  // Arc clockwise from 210° to 330° (the top open arc)
-  ctx.arc(cx, circleCY, size, startRad, endRad);
+  // Stem bottom (wider than the circle opening)
+  const stemBottomY = cy + size * g.stemBottom;
 
-  // Right side of stem going down
-  ctx.lineTo(cx + size * g.stemHalfWidth, cy + size * g.stemBottom);
+  ctx.moveTo(rightJoinX, rightJoinY);
+
+  // Large arc ANTICLOCKWISE from rightJoin → over the top → leftJoin (the 310° arc)
+  ctx.arc(cx, circleCY, size, rightJoinAngle, leftJoinAngle, true);
+
+  // Left side of stem going down-left to the wider base
+  ctx.lineTo(cx - size * g.stemBottomHalfWidth, stemBottomY);
 
   // Bottom of stem
-  ctx.lineTo(cx - size * g.stemHalfWidth, cy + size * g.stemBottom);
+  ctx.lineTo(cx + size * g.stemBottomHalfWidth, stemBottomY);
 
+  // closePath draws the right side back up to rightJoinX/Y
   ctx.closePath();
 }
 
