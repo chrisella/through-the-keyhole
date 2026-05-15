@@ -1,0 +1,409 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+.app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+
+/* ─── Canvas ─────────────────────────────────────────────── */
+
+.keyhole-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: none;
+}
+
+/* ─── Empty state ────────────────────────────────────────── */
+
+.empty-state {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #0a0a0a;
+  color: #888;
+  user-select: none;
+}
+
+.empty-state:hover {
+  background: #111;
+  color: #aaa;
+}
+
+.empty-state-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.empty-state-icon svg {
+  width: 80px;
+  height: 80px;
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-family: system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.empty-state-hint {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* ─── Settings button ────────────────────────────────────── */
+
+.settings-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  transition: background 0.15s;
+}
+
+.settings-btn:hover,
+.settings-btn--open {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.settings-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ─── Settings backdrop ──────────────────────────────────── */
+
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 149;
+}
+
+/* ─── Settings panel ─────────────────────────────────────── */
+
+.settings-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  z-index: 150;
+  background: #1a1a1a;
+  color: #ddd;
+  font-family: system-ui, sans-serif;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.6);
+}
+
+.settings-panel--open {
+  transform: translateX(0);
+}
+
+.settings-panel-inner {
+  padding: 72px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.settings-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: -12px;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settings-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+}
+
+.settings-value {
+  color: #aaa;
+  font-weight: 500;
+}
+
+.settings-range {
+  width: 100%;
+  accent-color: #6c8ebf;
+}
+
+.settings-color {
+  width: 100%;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 2px;
+  background: transparent;
+}
+
+/* ─── Shape picker ───────────────────────────────────────── */
+
+.shape-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.shape-btn {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #242424;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.shape-btn:hover {
+  background: #2e2e2e;
+}
+
+.shape-btn--active {
+  background: #2a3f5e;
+  border-color: #6c8ebf;
+  color: #fff;
+}
+
+/* ─── Background picker ──────────────────────────────────── */
+
+.bg-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bg-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.settings-blur-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+/* ─── Shortcuts ──────────────────────────────────────────── */
+
+.settings-help-toggle {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}
+
+.settings-help-toggle:hover {
+  color: #ccc;
+}
+
+.shortcuts-list {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shortcut-row {
+  display: flex;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+
+.shortcut-key {
+  font-family: monospace;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 1px 6px;
+  white-space: nowrap;
+  min-width: 90px;
+  color: #ccc;
+}
+
+.shortcut-desc {
+  color: #888;
+}
+
+/* ─── Reset button ───────────────────────────────────────── */
+
+.reset-btn {
+  padding: 9px 16px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #242424;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.12s;
+}
+
+.reset-btn:hover {
+  background: #2e2e2e;
+}
+
+.reset-hint {
+  font-size: 0.75rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.settings-version {
+  display: none;
+}
+
+/* ─── Touch controls ─────────────────────────────────────── */
+
+.touch-controls {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 12px;
+}
+
+.touch-btn {
+  padding: 12px 28px;
+  border-radius: 32px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.touch-btn--reveal {
+  background: rgba(108, 142, 191, 0.9);
+  color: #fff;
+}
+
+.touch-btn--reset {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* ─── Onboarding ─────────────────────────────────────────── */
+
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.onboarding-card {
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 380px;
+  width: calc(100% - 48px);
+  font-family: system-ui, sans-serif;
+  color: #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.onboarding-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.onboarding-desc {
+  font-size: 0.9rem;
+  color: #888;
+  line-height: 1.5;
+}
+
+.onboarding-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.onboarding-list li strong {
+  color: #fff;
+}
+
+.onboarding-btn {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #6c8ebf;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.onboarding-btn:hover {
+  background: #7da0d4;
+}
