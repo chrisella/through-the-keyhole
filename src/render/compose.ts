@@ -2,6 +2,19 @@ import { Settings, ImageData, FitRect, KeyholeRef, Shape } from '../types';
 import { buildShapePath, KEYHOLE_GEOMETRY } from './shapes';
 import { easeOutCubic, easeInCubic, clamp, lerp } from '../lib/easing';
 
+let _offscreenEl: HTMLCanvasElement | null = null;
+let _offscreenCtx: CanvasRenderingContext2D | null = null;
+
+function getOffscreenCtx(w: number, h: number): CanvasRenderingContext2D {
+  if (!_offscreenEl || _offscreenEl.width !== w || _offscreenEl.height !== h) {
+    _offscreenEl = document.createElement('canvas');
+    _offscreenEl.width = w;
+    _offscreenEl.height = h;
+    _offscreenCtx = _offscreenEl.getContext('2d')!;
+  }
+  return _offscreenCtx!;
+}
+
 
 export interface ComposeFrame {
   image: ImageData;
@@ -70,11 +83,24 @@ export function compose(ctx: CanvasRenderingContext2D, frame: ComposeFrame): boo
   }
 
   // Clip to keyhole shape and draw image
-  ctx.save();
-  buildShapePath(ctx, settings.shape, cx, cy, currentSize);
-  ctx.clip();
-  ctx.drawImage(image.bitmap, fit.dx, fit.dy, fit.dw, fit.dh);
-  ctx.restore();
+  if (settings.edgeBlur > 0) {
+    const off = getOffscreenCtx(canvasW, canvasH);
+    off.clearRect(0, 0, canvasW, canvasH);
+    off.drawImage(image.bitmap, fit.dx, fit.dy, fit.dw, fit.dh);
+    off.globalCompositeOperation = 'destination-in';
+    off.filter = `blur(${settings.edgeBlur}px)`;
+    buildShapePath(off, settings.shape, cx, cy, currentSize);
+    off.fill();
+    off.filter = 'none';
+    off.globalCompositeOperation = 'source-over';
+    ctx.drawImage(_offscreenEl!, 0, 0);
+  } else {
+    ctx.save();
+    buildShapePath(ctx, settings.shape, cx, cy, currentSize);
+    ctx.clip();
+    ctx.drawImage(image.bitmap, fit.dx, fit.dy, fit.dw, fit.dh);
+    ctx.restore();
+  }
 
   return keyhole.revealing;
 }

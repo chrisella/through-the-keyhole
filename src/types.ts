@@ -10,6 +10,7 @@ export interface Settings {
   blurRadius: number;
   moveMode: MoveMode;
   revealDuration: number;
+  edgeBlur: number;
 }
 
 export interface ImageData {

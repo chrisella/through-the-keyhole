@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Settings, Shape, BackgroundMode, MoveMode } from '../types';
 import { MIN_SIZE, MAX_SIZE } from '../render/shapes';
 import { DEFAULT_SETTINGS } from '../lib/storage';
@@ -36,6 +37,8 @@ const SHORTCUTS = [
 ];
 
 export function SettingsPanel({ open, settings, onUpdate, onReset, showHelp, onToggleHelp }: Props) {
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+
   return (
     <aside className={`settings-panel ${open ? 'settings-panel--open' : ''}`}>
       <div className="settings-panel-inner">
@@ -68,21 +71,6 @@ export function SettingsPanel({ open, settings, onUpdate, onReset, showHelp, onT
             onChange={e => onUpdate({ size: Number(e.target.value) })}
             className="settings-range"
           />
-        </section>
-
-        <section className="settings-section">
-          <label className="settings-label">Mouse movement</label>
-          <div className="move-toggle">
-            {([['hover', 'Hover'], ['drag', 'Click & drag']] as [MoveMode, string][]).map(([value, label]) => (
-              <button
-                key={value}
-                className={`shape-btn ${settings.moveMode === value ? 'shape-btn--active' : ''}`}
-                onClick={() => onUpdate({ moveMode: value })}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
         </section>
 
         <section className="settings-section">
@@ -127,18 +115,57 @@ export function SettingsPanel({ open, settings, onUpdate, onReset, showHelp, onT
         </section>
 
         <section className="settings-section">
-          <label className="settings-label">
-            Reveal speed <span className="settings-value">{(settings.revealDuration / 1000).toFixed(1)}s</span>
-          </label>
-          <input
-            type="range"
-            min={300}
-            max={3000}
-            step={100}
-            value={settings.revealDuration}
-            onChange={e => onUpdate({ revealDuration: Number(e.target.value) })}
-            className="settings-range"
-          />
+          <button className="advanced-toggle" onClick={() => setAdvancedOpen(o => !o)}>
+            Advanced {advancedOpen ? '▲' : '▼'}
+          </button>
+          {advancedOpen && (
+            <div className="advanced-inner">
+              <div className="settings-section">
+                <label className="settings-label">Mouse movement</label>
+                <div className="move-toggle">
+                  {([['hover', 'Hover'], ['drag', 'Click & drag']] as [MoveMode, string][]).map(([value, label]) => (
+                    <button
+                      key={value}
+                      className={`shape-btn ${settings.moveMode === value ? 'shape-btn--active' : ''}`}
+                      onClick={() => onUpdate({ moveMode: value })}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="settings-section">
+                <label className="settings-label">
+                  Reveal speed <span className="settings-value">{(settings.revealDuration / 1000).toFixed(1)}s</span>
+                </label>
+                <input
+                  type="range"
+                  min={300}
+                  max={3000}
+                  step={100}
+                  value={settings.revealDuration}
+                  onChange={e => onUpdate({ revealDuration: Number(e.target.value) })}
+                  className="settings-range"
+                />
+              </div>
+
+              <div className="settings-section">
+                <label className="settings-label">
+                  Edge feather <span className="settings-value">{settings.edgeBlur === 0 ? 'Off' : `${settings.edgeBlur}px`}</span>
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={settings.edgeBlur}
+                  onChange={e => onUpdate({ edgeBlur: Number(e.target.value) })}
+                  className="settings-range"
+                />
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="settings-section">

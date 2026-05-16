@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS: Settings = {
   blurRadius: 20,
   moveMode: 'hover',
   revealDuration: 1000,
+  edgeBlur: 6,
 };
 
 interface StorageWrapper {
