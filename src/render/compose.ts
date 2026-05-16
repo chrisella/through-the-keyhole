@@ -82,5 +82,5 @@ export function computeRevealTargetSize(originX: number, originY: number, canvas
     { x: canvasW, y: canvasH },
   ];
   const maxDist = Math.max(...corners.map(c => Math.hypot(c.x - originX, c.y - originY)));
-  return maxDist * 3;
+  return maxDist * 1.5;
 }
