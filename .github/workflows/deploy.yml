@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -35,7 +35,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_BASE_PATH: /through-the-keyhole-site/
+          VITE_BASE_PATH: /through-the-keyhole/
 
       - uses: actions/configure-pages@v5
 
