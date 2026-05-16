@@ -2,7 +2,6 @@ import { Settings, ImageData, FitRect, KeyholeRef } from '../types';
 import { buildShapePath } from './shapes';
 import { easeOutCubic, clamp, lerp } from '../lib/easing';
 
-const REVEAL_DURATION_MS = 700;
 
 export interface ComposeFrame {
   image: ImageData;
@@ -53,7 +52,7 @@ export function compose(ctx: CanvasRenderingContext2D, frame: ComposeFrame): boo
 
   if (keyhole.revealing && keyhole.revealStartedAt !== null) {
     const elapsed = now - keyhole.revealStartedAt;
-    const t = clamp(elapsed / REVEAL_DURATION_MS, 0, 1);
+    const t = clamp(elapsed / settings.revealDuration, 0, 1);
     const eased = easeOutCubic(t);
     currentSize = lerp(keyhole.revealFromSize, keyhole.revealTargetSize, eased);
     cx = keyhole.revealOrigin.x;

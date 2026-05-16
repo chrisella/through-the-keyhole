@@ -9,6 +9,7 @@ export interface Settings {
   backgroundColor: string;
   blurRadius: number;
   moveMode: MoveMode;
+  revealDuration: number;
 }
 
 export interface ImageData {

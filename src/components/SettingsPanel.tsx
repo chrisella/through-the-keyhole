@@ -127,6 +127,21 @@ export function SettingsPanel({ open, settings, onUpdate, onReset, showHelp, onT
         </section>
 
         <section className="settings-section">
+          <label className="settings-label">
+            Reveal speed <span className="settings-value">{(settings.revealDuration / 1000).toFixed(1)}s</span>
+          </label>
+          <input
+            type="range"
+            min={300}
+            max={3000}
+            step={100}
+            value={settings.revealDuration}
+            onChange={e => onUpdate({ revealDuration: Number(e.target.value) })}
+            className="settings-range"
+          />
+        </section>
+
+        <section className="settings-section">
           <button className="settings-help-toggle" onClick={onToggleHelp}>
             Shortcuts {showHelp ? '▲' : '▼'}
           </button>
