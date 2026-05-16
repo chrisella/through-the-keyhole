@@ -29,7 +29,7 @@ export default function App() {
   const { settings, update, resetDefaults } = useSettings();
   const [revealed, setRevealed] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
+  const [showHelp, setShowHelp] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => !isOnboardingDismissed());
 
   const keyholeRef = useRef<KeyholeRef>({ ...DEFAULT_KEYHOLE });
