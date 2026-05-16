@@ -34,7 +34,7 @@ export function useKeyboard({
       switch (e.key) {
         case ' ':
           e.preventDefault();
-          if (!e.repeat && hasImage && !revealed) onReveal();
+          if (!e.repeat && hasImage) onReveal();
           break;
         case '+':
         case '=':

@@ -103,6 +103,7 @@ export function KeyholeCanvas({ image, settings, revealed, onRevealComplete, key
         // Only sync to settings size if user hasn't adjusted via wheel/key after init
       }
 
+      const wasRevealing = kh.revealing;
       const stillAnimating = compose(ctx, {
         image,
         fit,
@@ -117,7 +118,7 @@ export function KeyholeCanvas({ image, settings, revealed, onRevealComplete, key
 
       ctx.restore();
 
-      if (kh.revealing && !stillAnimating) {
+      if (wasRevealing && !stillAnimating) {
         onRevealComplete();
       }
 

@@ -10,7 +10,7 @@ export const DEFAULT_SETTINGS: Settings = {
   backgroundColor: '#1a1a2e',
   blurRadius: 20,
   moveMode: 'hover',
-  revealDuration: 1000,
+  revealDuration: 2000,
 };
 
 interface StorageWrapper {

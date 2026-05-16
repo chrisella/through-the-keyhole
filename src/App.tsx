@@ -52,7 +52,12 @@ export default function App() {
   const startReveal = useStartReveal(keyholeRef);
 
   const handleReveal = useCallback(() => {
-    if (!image || revealed) return;
+    if (!image) return;
+    if (revealed) {
+      setRevealed(false);
+      keyholeRef.current.revealing = false;
+      return;
+    }
     startReveal();
   }, [image, revealed, startReveal]);
 
