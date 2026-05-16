@@ -136,7 +136,7 @@ export function KeyholeCanvas({ image, settings, revealed, onRevealComplete, key
     <canvas
       ref={canvasRef}
       className="keyhole-canvas"
-      style={{ touchAction: 'none' }}
+      style={{ touchAction: 'none', cursor: settings.moveMode === 'drag' ? 'crosshair' : 'none' }}
     />
   );
 }

@@ -49,6 +49,11 @@ export function usePointerInput(
       } else if (active.size === 1 && keyholeRef.current) {
         keyholeRef.current.cursor = pt;
       }
+
+      // Hide cursor while dragging in drag mode
+      if (!followHover && e.pointerType === 'mouse') {
+        canvas!.style.cursor = 'none';
+      }
     }
 
     function onPointerMove(e: PointerEvent) {
@@ -81,6 +86,11 @@ export function usePointerInput(
       if (active.size === 1) {
         // Re-baseline pinch when going from 2→1 then adding a new pointer later
         pinchInitialDist = 0;
+      }
+
+      // Restore crosshair when drag ends in drag mode
+      if (!followHover && e.pointerType === 'mouse' && active.size === 0) {
+        canvas!.style.cursor = 'crosshair';
       }
     }
 
