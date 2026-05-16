@@ -1,4 +1,4 @@
-import { Settings, Shape, BackgroundMode } from '../types';
+import { Settings, Shape, BackgroundMode, MoveMode } from '../types';
 import { MIN_SIZE, MAX_SIZE } from '../render/shapes';
 import { DEFAULT_SETTINGS } from '../lib/storage';
 
@@ -68,6 +68,21 @@ export function SettingsPanel({ open, settings, onUpdate, onReset, showHelp, onT
             onChange={e => onUpdate({ size: Number(e.target.value) })}
             className="settings-range"
           />
+        </section>
+
+        <section className="settings-section">
+          <label className="settings-label">Mouse movement</label>
+          <div className="move-toggle">
+            {([['hover', 'Hover'], ['drag', 'Click & drag']] as [MoveMode, string][]).map(([value, label]) => (
+              <button
+                key={value}
+                className={`shape-btn ${settings.moveMode === value ? 'shape-btn--active' : ''}`}
+                onClick={() => onUpdate({ moveMode: value })}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </section>
 
         <section className="settings-section">

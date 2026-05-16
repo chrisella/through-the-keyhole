@@ -14,6 +14,7 @@ export function usePointerInput(
   canvasRef: RefObject<HTMLCanvasElement | null>,
   keyholeRef: RefObject<KeyholeRef>,
   revealed: boolean,
+  followHover: boolean,
 ) {
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -53,8 +54,8 @@ export function usePointerInput(
     function onPointerMove(e: PointerEvent) {
       const kh = keyholeRef.current!;
 
-      // Mouse: follow hover without needing a button held down
-      if (e.pointerType === 'mouse' && !active.has(e.pointerId)) {
+      // Mouse hover mode: follow cursor without a button held down
+      if (followHover && e.pointerType === 'mouse' && !active.has(e.pointerId)) {
         kh.cursor = getCanvasPoint(e);
         return;
       }
@@ -103,5 +104,5 @@ export function usePointerInput(
       canvas.removeEventListener('pointercancel', onPointerUp);
       canvas.removeEventListener('wheel', onWheel);
     };
-  }, [canvasRef, keyholeRef, revealed]);
+  }, [canvasRef, keyholeRef, revealed, followHover]);
 }

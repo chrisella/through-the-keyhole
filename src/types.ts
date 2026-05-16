@@ -1,5 +1,6 @@
 export type Shape = 'keyhole' | 'circle' | 'rect' | 'star';
 export type BackgroundMode = 'black' | 'color' | 'blur';
+export type MoveMode = 'hover' | 'drag';
 
 export interface Settings {
   shape: Shape;
@@ -7,6 +8,7 @@ export interface Settings {
   background: BackgroundMode;
   backgroundColor: string;
   blurRadius: number;
+  moveMode: MoveMode;
 }
 
 export interface ImageData {

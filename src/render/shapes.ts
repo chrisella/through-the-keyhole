@@ -56,11 +56,9 @@ function buildKeyhole(ctx: CanvasRenderingContext2D, cx: number, cy: number, siz
   const rightJoinAngle = downRad - openHalfRad; // e.g. 65°
   const leftJoinAngle  = downRad + openHalfRad; // e.g. 115°
 
-  // Points where the circle edge meets the stem
+  // Start point: right side where circle meets stem
   const rightJoinX = cx + size * Math.cos(rightJoinAngle);
   const rightJoinY = circleCY + size * Math.sin(rightJoinAngle);
-  const leftJoinX  = cx + size * Math.cos(leftJoinAngle);
-  const leftJoinY  = circleCY + size * Math.sin(leftJoinAngle);
 
   // Stem bottom (wider than the circle opening)
   const stemBottomY = cy + size * g.stemBottom;

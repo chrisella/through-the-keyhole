@@ -20,7 +20,7 @@ export function KeyholeCanvas({ image, settings, revealed, onRevealComplete, key
   const prevSettingsRef = useRef<Settings>(settings);
   const prevImageRef = useRef<ImageData>(image);
 
-  usePointerInput(canvasRef, keyholeRef, revealed);
+  usePointerInput(canvasRef, keyholeRef, revealed, settings.moveMode === 'hover');
 
   // Invalidate blur cache when image or blur settings change
   useEffect(() => {

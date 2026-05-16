@@ -212,6 +212,14 @@ html, body, #root {
   color: #fff;
 }
 
+/* ─── Move mode toggle ───────────────────────────────────── */
+
+.move-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
 /* ─── Background picker ──────────────────────────────────── */
 
 .bg-picker {
