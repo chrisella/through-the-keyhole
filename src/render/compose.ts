@@ -1,6 +1,6 @@
 import { Settings, ImageData, FitRect, KeyholeRef } from '../types';
 import { buildShapePath } from './shapes';
-import { easeOutCubic, clamp, lerp } from '../lib/easing';
+import { easeOutCubic, easeInCubic, clamp, lerp } from '../lib/easing';
 
 
 export interface ComposeFrame {
@@ -53,15 +53,20 @@ export function compose(ctx: CanvasRenderingContext2D, frame: ComposeFrame): boo
   if (keyhole.revealing && keyhole.revealStartedAt !== null) {
     const elapsed = now - keyhole.revealStartedAt;
     const t = clamp(elapsed / settings.revealDuration, 0, 1);
-    const eased = easeOutCubic(t);
-    currentSize = lerp(keyhole.revealFromSize, keyhole.revealTargetSize, eased);
+    currentSize = lerp(keyhole.revealFromSize, keyhole.revealTargetSize, easeOutCubic(t));
     cx = keyhole.revealOrigin.x;
     cy = keyhole.revealOrigin.y;
     animating = t < 1;
     if (!animating) {
-      // Signal caller to flip to revealed
       keyhole.revealing = false;
     }
+  } else if (keyhole.unrevealing && keyhole.unrevealStartedAt !== null) {
+    const elapsed = now - keyhole.unrevealStartedAt;
+    const t = clamp(elapsed / settings.revealDuration, 0, 1);
+    currentSize = lerp(keyhole.revealTargetSize, keyhole.size, easeInCubic(t));
+    cx = keyhole.revealOrigin.x;
+    cy = keyhole.revealOrigin.y;
+    if (t >= 1) keyhole.unrevealing = false;
   }
 
   // Clip to keyhole shape and draw image

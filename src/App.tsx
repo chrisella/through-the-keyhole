@@ -21,6 +21,8 @@ const DEFAULT_KEYHOLE: KeyholeRef = {
   revealFromSize: DEFAULT_SETTINGS.size,
   revealOrigin: { x: 0, y: 0 },
   revealTargetSize: 0,
+  unrevealing: false,
+  unrevealStartedAt: null,
 };
 
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
@@ -53,9 +55,12 @@ export default function App() {
 
   const handleReveal = useCallback(() => {
     if (!image) return;
+    const kh = keyholeRef.current;
+    if (kh.revealing || kh.unrevealing) return;
     if (revealed) {
       setRevealed(false);
-      keyholeRef.current.revealing = false;
+      kh.unrevealing = true;
+      kh.unrevealStartedAt = performance.now();
       return;
     }
     startReveal();

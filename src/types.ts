@@ -38,4 +38,6 @@ export interface KeyholeRef {
   revealFromSize: number;
   revealOrigin: Point;
   revealTargetSize: number;
+  unrevealing: boolean;
+  unrevealStartedAt: number | null;
 }
