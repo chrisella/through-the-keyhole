@@ -1,5 +1,5 @@
-import { Settings, ImageData, FitRect, KeyholeRef } from '../types';
-import { buildShapePath } from './shapes';
+import { Settings, ImageData, FitRect, KeyholeRef, Shape } from '../types';
+import { buildShapePath, KEYHOLE_GEOMETRY } from './shapes';
 import { easeOutCubic, easeInCubic, clamp, lerp } from '../lib/easing';
 
 
@@ -79,13 +79,43 @@ export function compose(ctx: CanvasRenderingContext2D, frame: ComposeFrame): boo
   return keyhole.revealing;
 }
 
-export function computeRevealTargetSize(originX: number, originY: number, canvasW: number, canvasH: number): number {
+export function computeRevealTargetSize(
+  shape: Shape,
+  originX: number,
+  originY: number,
+  canvasW: number,
+  canvasH: number,
+): number {
   const corners = [
     { x: 0, y: 0 },
     { x: canvasW, y: 0 },
     { x: 0, y: canvasH },
     { x: canvasW, y: canvasH },
   ];
+
+  if (shape === 'rect') {
+    // Rect is (cx±size, cy±size) — covered when size >= max axis distance to any edge
+    return Math.max(originX, canvasW - originX, originY, canvasH - originY) * 1.01;
+  }
+
+  if (shape === 'keyhole') {
+    // Circle center sits at (originX, originY + offset*size). Solve per corner for minimum size:
+    // (1 - offset²)·size² + 2·offset·dy·size − d² ≥ 0
+    const offset = KEYHOLE_GEOMETRY.circleOffsetY; // −0.3
+    const a = 1 - offset * offset; // 0.91
+    let maxSize = 0;
+    for (const c of corners) {
+      const dx = c.x - originX;
+      const dy = c.y - originY;
+      const d2 = dx * dx + dy * dy;
+      const b = 2 * offset * dy;
+      const size = (-b + Math.sqrt(b * b + 4 * a * d2)) / (2 * a);
+      maxSize = Math.max(maxSize, size);
+    }
+    return maxSize * 1.01;
+  }
+
+  // Circle and star: radius 'size' centred at origin
   const maxDist = Math.max(...corners.map(c => Math.hypot(c.x - originX, c.y - originY)));
-  return maxDist * 1.5;
+  return maxDist * 1.01;
 }

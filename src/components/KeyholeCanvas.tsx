@@ -44,6 +44,7 @@ export function KeyholeCanvas({ image, settings, revealed, onRevealComplete, key
     kh.revealOrigin = { ...kh.cursor };
     kh.revealFromSize = kh.size;
     kh.revealTargetSize = computeRevealTargetSize(
+      settings.shape,
       kh.cursor.x,
       kh.cursor.y,
       canvas.width / (window.devicePixelRatio || 1),
@@ -51,7 +52,7 @@ export function KeyholeCanvas({ image, settings, revealed, onRevealComplete, key
     );
     kh.revealStartedAt = performance.now();
     kh.revealing = true;
-  }, [keyholeRef]);
+  }, [keyholeRef, settings.shape]);
 
   // Expose startReveal so parent can call it
   useEffect(() => {
